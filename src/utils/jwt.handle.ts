@@ -1,11 +1,16 @@
 import pkg from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 const { sign, verify } = pkg;   //Importamos las funciones sign y verify de la librería jsonwebtoken
-const JWT_SECRET = process.env.JWT_SECRET || "token.010101010101";
+const JWT_SECRET = process.env.ACCESS_TOKEN_SECRET || "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
 
-//No debemos pasar información sensible en el payload, en este caso vamos a pasar como parametro el ID del usuario
-const generateToken = (id:string) => {
-    const jwt = sign({id}, JWT_SECRET, {expiresIn: '20s'});
-    return jwt;
+const generateToken = (email: string, additionalData: any = {}) => {
+    const payload = {
+        email: email,
+        ...additionalData // Aquí se incluyen los datos adicionales
+    };
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", {
+        expiresIn: "2h",
+    });
 };
 
 const verifyToken = (jwt: string) => {
